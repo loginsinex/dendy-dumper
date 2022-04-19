@@ -38,31 +38,10 @@ void set_address_ppu(uint16_t address)
 
 void PrepareRead_ppu(uint16_t address)
 {
-	// PPU_CART_REG_DDR = 0b00000000;
-	// PPU_CART_WRITE = 0b00000000;
+	PPU_CART_REG_DDR = 0b00000000;
+	PPU_CART_WRITE = 0b00000000;
 }
 
-/*
-volatile bool _l_int_done = false;
-
-ISR( INT1_vect )
-{
-	//_delay_us( 0.7 );
-	PPU_SHLD_DN;
-	PPU_SHLD_UP;	
-	PPU_CLKINH_DN;
-	_l_int_done = true;
-	GICR = 0;
-}
-
-void raise_int1()
-{
-	_l_int_done = false;
-    MCUCR = (1<<ISC01)|(1<<ISC00);
-    GICR = (1<<INT1);
-    sei();
-}
-*/
 
 uint8_t qread_ppu_byte()
 {
@@ -135,17 +114,6 @@ BYTE ReadAddress_ppu(uint16_t address)
 
 bool WriteAddress_ppu(uint16_t address, BYTE value)
 {
-	/*
-	PPU_CART_REG_DDR = 0b11111111;
-	set_address_ppu( address );
-	M2_CLOCK_DN; PPU_WR_ON;
-	PPU_CART_WRITE = value;
-	asm("nop");
-	M2_CLOCK_UP; PPU_WR_OFF;
-	asm("nop");
-	// _delay_us( 100 );
-	return true;
-	*/
 	
 	// nothing to do
 	return false;
@@ -167,17 +135,6 @@ BYTE QReadAddress_ppu(uint16_t address)
 
 bool QWriteAddress_ppu(uint16_t address, BYTE value)
 {
-	/*
-	PPU_CART_REG_DDR = 0b11111111;
-	set_address_ppu( address );
-	PPU_WR_ON;
-	PPU_CART_WRITE = value;
-	asm("nop");
-	PPU_WR_OFF;
-	// _delay_us( 100 );
-	return true;
-	*/
-	
 	// nothing to do
 	return false;
 }
