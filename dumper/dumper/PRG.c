@@ -53,7 +53,6 @@ bool WriteAddress_prg(uint16_t address, BYTE value)
 	PRG_CART_WRITE = 0;
 	PRG_CART_REG_DDR = 0b11111111;
 	PRG_WRITE;
-	//set_romsel( address );
 	PRG_CART_WRITE = value;
 	set_address_prg( address ); 
 	_delay_us(1);
@@ -83,12 +82,12 @@ bool QWriteAddress_prg(uint16_t address, BYTE value)
 	PRG_CART_WRITE = 0;
 	PRG_CART_REG_DDR = 0b11111111;
 	M2_SYNC_DN;
-	set_address_prg( address & 0x7FFF ); // PHI2 low, ROMSEL always HIGH
+	set_address_prg( address & 0x7FFF ); 
 	PRG_WRITE;
 	PRG_CART_WRITE = value;
 	set_address_prg( address );
 	M2_SYNC_UP;
-	set_address_prg( address & 0x7FFF ); // clock /ROMSEL for UNROM
+	set_address_prg( address & 0x7FFF ); // clock /ROMSEL 
 	M2_SYNC_DN;
 	PRG_READ;
 	PrepareRead_prg( 0 );
