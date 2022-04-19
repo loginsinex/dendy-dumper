@@ -10,44 +10,7 @@
 #define MAIN_H_
 
 
-// fuses: high=0xD9; low=0xC4
 
-/* V3
-	PPU /RD:		A0
-	PPU /A13:		A1
-	PPU /WR:		A2
-	/ROMSEL:		A3
-	PRG Card Reg:	B0-B7
-	PPU Card Reg:	C0-C7
-	(RX)(TX)		D0-D1
-	/RESET:			D2
-	R/W Clock:		D3
-	PPU Reg:		D4
-	PRG Reg:		D5
-	M2:				D6
-	CPU R/W:		D7
-*/
-
-/* V4
-	A0-A7		- PPU Card Reg
-	B0-B7		- PRG Card Reg
-	D0-D1		- (RX)(TX)
-	D2			- CIRAM /CE
-	D3			- M2
-	D4			- PPU /WR
-	D5			- PPU /RD
-	D6			- CPU /WR
-	D7			- CIRAM A10
-	C0			- PPU Shift Reg /OE
-	C1			- Shift Reg ST
-	C2			- Shift Reg SH
-	C3			- Shift Reg /MR
-	C4			- PPU Shift Reg DS
-	C5			- PRG Shift Reg DS
-	C6			- PRG Shift Reg /OE
-	C7			- Quartz /OE
-*/
-	
 // #define PUTTY_MODE
 
 #define F_CPU 16000000UL
@@ -73,8 +36,8 @@
 
 #define PPU_RD_ON		{ CFG1_REG &= ~PPU_RD_BIT; }
 #define PPU_RD_OFF		{ CFG1_REG |=  PPU_RD_BIT; }
-#define PPU_WR_ON		{ } //CFG1_REG &= ~PPU_WR_BIT; }
-#define PPU_WR_OFF		{ } //CFG1_REG |=  PPU_WR_BIT; }
+#define PPU_WR_ON		{ CFG1_REG &= ~PPU_WR_BIT; }
+#define PPU_WR_OFF		{ CFG1_REG |=  PPU_WR_BIT; }
 #define M2_CLOCK_UP		{ CFG1_REG |=  M2_BIT; }
 #define M2_CLOCK_DN		{ CFG1_REG &= ~M2_BIT; }
 #define PRG_READ		{ CFG1_REG |=  CPU_RW_BIT; }
@@ -119,17 +82,17 @@
 #define CFG3_REG				PORTA
 #define CFG3_REG_DDR			DDRA
 
-#define PPU_CLK_BIT			( 1 << PINA3 )
-#define PPU_SHLD_BIT		( 1 << PINA2 )
-#define PPU_CLKINH_BIT		( 1 << PINA0 )
-#define PPU_QH_BIT			( 1 << PINA1 )
+#define PPU_QH_BIT			( 1 << PINA0 )
+#define PPU_CLK_BIT			( 1 << PINA1 )
+#define PPU_CLKINH_BIT		( 1 << PINA2 )
+#define PPU_SHLD_BIT		( 1 << PINA3 )
 
 #define PPU_CLK_UP			{ CFG3_REG |= PPU_CLK_BIT; }
 #define PPU_CLK_DN			{ CFG3_REG &= ~PPU_CLK_BIT; }
-#define PPU_SHLD_UP			{ CFG1_REG |= CIRAM_CE_BIT; }
-#define PPU_SHLD_DN			{ CFG1_REG &= ~CIRAM_CE_BIT; }
-#define PPU_CLKINH_UP		{ CFG1_REG |= PPU_WR_BIT; }
-#define PPU_CLKINH_DN		{ CFG1_REG &= ~PPU_WR_BIT; }
+#define PPU_SHLD_UP			{ CFG3_REG |= PPU_SHLD_BIT; }
+#define PPU_SHLD_DN			{ CFG3_REG &= ~PPU_SHLD_BIT; }
+#define PPU_CLKINH_UP		{ CFG3_REG |= PPU_CLKINH_BIT; }
+#define PPU_CLKINH_DN		{ CFG3_REG &= ~PPU_CLKINH_BIT; }
 #define PPU_QH_READ			( PINA & PPU_QH_BIT )
 
 #define PRG_CART_REG_DDR		DDRB
