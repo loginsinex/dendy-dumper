@@ -7,31 +7,10 @@
 
 #include "main.h"
 
-// ISR (TIMER0_OVF_vect)
-// {
-//	//unsigned char ddrd = DDRC, pind = PINC;
-//	
-//	TCNT0=0x00;										// Clear timer
-// }
-
-void InitializeTimer0()
-{
-	TIMSK |= ( 1 << TOIE0 ); // set interrupt on overflow of 0 (from 3 timers) timer. Bit TOIE0
-	//	TCCR0 = (0<<CS02) | (0<<CS01) | (0<<CS00);	// timer stopped
-	//	TCCR0 = (0<<CS02) | (0<<CS01) | (1<<CS00);	// no prescaller
-	//  TCCR0 = (0<<CS02) | (1<<CS01) | (0<<CS00);	// clock / 8
-	//	TCCR0 = (0<<CS02) | (1<<CS01) | (1<<CS00);	// clock / 64
-	TCCR0 = (1<<CS02) | (0<<CS01) | (0<<CS00);	// clock / 256
-	//	TCCR0 = (1<<CS02) | (0<<CS01) | (1<<CS00);	// clock / 1024
-	// follow values only for external clock
-}
-
 void init_ports()
 {
-	// CFG1_REG_DDR = 0b11111111;
-	
 	CFG1_REG_DDR = 
-		( PORT_OUT	* CIRAM_CE_BIT )		|
+		( PORT_IN	* CIRAM_CE_BIT )		|
 		( PORT_OUT	* M2_BIT )				|
 		( PORT_OUT	* PPU_RD_BIT )			|
 		( PORT_OUT	* PPU_WR_BIT ) 			|
@@ -48,9 +27,6 @@ void init_ports()
 		( PORT_OUT	* PRG_REG_ENABLE_BIT )		|
 		( PORT_OUT	* QUARTZ_ENABLE_BIT );
 
-	// PPU_CART_REG_DDR = 0b00000000;
-	// PRG_CART_REG_DDR = 0b00000000;
-	// PPU_CART_WRITE = 0b11111111;
 	CFG3_REG_DDR = 
 		( PORT_OUT	* PPU_CLK_BIT )		|
 		( PORT_OUT	* PPU_SHLD_BIT )	|
@@ -73,7 +49,6 @@ void init_ports()
 	
 	g_fQuartzEnabled = true;
 	CFG1_REG_DDR &= ~M2_BIT;
-	// QUARTZ_ENABLE;
 	QUARTZ_DISABLE;
 	M2_CLOCK_UP;	
 }
@@ -84,7 +59,6 @@ int main(void)
 {
     /* Replace with your application code */
 
-	//InitializeTimer0();
 	uart_init();
 	init_ports();
 	const unsigned char length = 16;
@@ -157,11 +131,6 @@ int main(void)
 	SEND_STATUS( STATUS_DUMPER_INITIALIZED );
 	uart_putc( err0 );
 	uart_putc( err1 );
-	// if(err & (1<<PORF )) uart_putc('0'); // printstr(("Power-on reset.\r\n"));
-	// if(err & (1<<EXTRF)) uart_putc('1'); // printstr(("External reset!\r\n"));
-	// if(err & (1<<BORF )) uart_putc('2'); // printstr(("Brownout reset!\r\n"));
-	// if(err & (1<<WDRF )) uart_putc('3'); // printstr(("Watchdog reset!\r\n"));
-	// if(err & (1<<JTRF )) uart_putc('4'); // printstr(("JTAG reset!\r\n"));
 	SEND_STATUS( STATUS_DUMPER_STARTED );
 	
 	while( 1 )
